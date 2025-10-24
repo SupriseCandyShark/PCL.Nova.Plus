@@ -1,8 +1,9 @@
 name: Wails build
 
 on:
-    push:
-        branches: [dev, main]
+    # push:
+    #     branches: [main]
+    workflow_dispatch:
 
 env:
     NODE_OPTIONS: "--max-old-space-size=4096"
@@ -33,11 +34,6 @@ jobs:
                       platform: "linux/arm64"
                       os: "ubuntu-24.04-arm"
                       realOs: "Linux-arm64"
-                    # Windows arm 构建
-                    - name: "PCL.Nova.Plus-Windows-arm64"
-                      platform: "windows/arm64"
-                      os: "windows-11-arm"
-                      realOs: "Windows-arm64"
 
         runs-on: ${{ matrix.build.os }}
         steps:
@@ -45,11 +41,22 @@ jobs:
               uses: actions/checkout@v4
               with:
                   submodules: recursive
+            - run: git config --global core.autocrlf input
+            # - name: Install Wails
+            #   uses: dAppServer/wails-build-action@main
+            #   id: build
+            #   with:
+            #       build-name: ${{ matrix.build.name }}
+            #       build-platform: ${{ matrix.build.platform }}
+            #       go-version: "1.24"
+            #       node-version: "23"
+            #       package: false
             - name: Install Linux Dependency
               shell: bash
               if: runner.os == 'Linux'
               run: |
-                  sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+                  sudo apt-get -yq update
+                  sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.1-dev gcc-aarch64-linux-gnu
             - name: Install Golang
               uses: actions/setup-go@v6
               with:
@@ -64,48 +71,52 @@ jobs:
             - name: Read Version
               id: version
               shell: bash
-              run: echo "version=$(cat Version)" >> $GITHUB_OUTPUT
+              run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
             - name: Build Wails App
+              if: ${{ matrix.build.os != 'windows-11-arm' }}
               shell: bash
               run: |
                   cfKey=${{secrets.CF_KEY}}
                   msKey=${{secrets.MS_KEY}}
-                  lsKey=${{srcrets.LS_KEY}}
-                  pvKey=${{secrets.PRIVATE_KEY}}
-                  CGO_ENABLED=1 wails build -v 0 -platform ${{matrix.build.platform}} -ldflags \
+                  lsKey=${{secrets.LS_KEY}}
+                  pvKey=${{secrets.PV_KEY}}
+                  ver=${{steps.version.outputs.version}}
+                  rver=${ver%-*}
+                  wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
                   "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
                   -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
-                  -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/${{steps.version.outputs.version}}' \
-                  -X 'NovaPlus/module/launcher.XApiKey=$cfKey' \
-                  -X 'NovaPlus/module/launcher.ClientId=$msKey' \
-                  -X 'NovaPlus/module/launcher.PrivacyKey=$pvKey' \
-                  -X 'NovaPlus/module/launcher.LittleSkinKey=$lsKey'"
+                  -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
+                  -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
+                  -X 'NovaPlus/module/launcher.MS_KEY=$msKey' \
+                  -X 'NovaPlus/module/launcher.PV_KEY=$pvKey' \
+                  -X 'NovaPlus/module/launcher.LS_KEY=$lsKey'"
+              env:
+                  CGO_ENABLED: 1
             - name: Rename Executable File
               shell: bash
               run: |
                   if [[ ${{matrix.build.os}} =~ "windows" ]]; then
                     mv ./build/bin/PCL.Nova.Plus.exe ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
-                  elif [ "${{matrix.build.os}}" -eq "macos-latest" ]; then
-                    zip -9 -r "./build/bin/PCL.Nova.Plus.app" .
-                    mv ./build/bin/PCL.Nova.Plus.zip ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.zip
+                  elif [[ "${{matrix.build.os}}" == "macos-latest" ]]; then
+                    mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
                   elif [[ "${{matrix.build.os}}" =~ "ubuntu" ]]; then
                     mv ./build/bin/PCL.Nova.Plus ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
                   fi
             - name: Upload all Artifacts Windows
-              if: ${{matrix.build.os == 'windows-latest' || matrix.build.os == 'windows-11-arm64'}}
+              if: ${{matrix.build.os == 'windows-latest' || matrix.build.os == 'windows-11-arm'}}
               uses: actions/upload-artifact@v4
               with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}.exe
+                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
             - name: Upload all Artifacts macOS
               if: ${{matrix.build.os == 'macos-latest'}}
               uses: actions/upload-artifact@v4
               with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}.zip
-            - name: Upload all Artifacts macOS
-              if: ${{matrix.build.os == 'ubuntu-24.04-arm' || matrix.build.os}}
+                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
+            - name: Upload all Artifacts Linux
+              if: ${{matrix.build.os == 'ubuntu-24.04-arm' || matrix.build.os == 'ubuntu-latest'}}
               uses: actions/upload-artifact@v4
               with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-Beta-${{matrix.build.realOs}}
+                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}

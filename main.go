@@ -99,7 +99,7 @@ func genRandomInt(seed int64) int {
 
 // 此处使用了 Privacy.go 里面的 PV_KEY，用来加密解密你的数据！
 func (a *App) CryptoUnlock(wc string) bool {
-	article := strings.Split(launcher.PV_KEY, "^|")
+	article := strings.Split(launcher.PV_KEY, "@@")
 	key := article[0]
 	iv := article[1]
 	wm, err := launcher.AESDecrypt(key, iv, wc)
@@ -108,7 +108,6 @@ func (a *App) CryptoUnlock(wc string) bool {
 	}
 	ua := a.GetUniqueAddress()
 	wt := "<moduleKey>" + ua + "</moduleKey><version>" + strconv.Itoa(genRandomInt(int64(launcher.GetHash(ua)))) + "</version>"
-	fmt.Println(wt)
 	return wm == wt
 }
 func BankerRound(x float64) float64 {
