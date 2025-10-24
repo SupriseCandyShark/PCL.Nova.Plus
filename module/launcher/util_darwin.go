@@ -27,7 +27,7 @@ func GetPCL2Identify() string {
 }
 
 func GetUniqueAddress() string {
-	cmd := CMD("system_profiler", "SPHardwareDataType", "|", "grep", "Hardware UUID")
+	cmd := CMD(GetCurrentDir(), "system_profiler", "SPHardwareDataType", "|", "grep", "Hardware UUID")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "ERR_MACOS"
@@ -44,11 +44,13 @@ func GetOtherDir() (string, error) {
 }
 
 func PingCMD(ip string, timeout time.Duration) *exec.Cmd {
-	return CMD("ping", "-c", "1", "-W", fmt.Sprintf("%d", timeout.Seconds()), ip)
+	return CMD(GetCurrentDir(), "ping", "-c", "1", "-W", fmt.Sprintf("%d", timeout.Seconds()), ip)
 }
 
-func CMD(name string, args ...string) *exec.Cmd {
-	return exec.Command(name, args...)
+func CMD(dir string, name string, args ...string) *exec.Cmd {
+	cmd := exec.Command(name, args...)
+	cmd.Dir = dir
+	return cmd
 }
 
 func openExp(fpath string) error {

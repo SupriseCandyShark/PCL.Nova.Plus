@@ -63,7 +63,7 @@ func GetPCL2Identify() string {
 }
 
 func GetUniqueAddress() string {
-	cmd := CMD("wmic", "csproduct", "get", "uuid")
+	cmd := CMD(GetCurrentDir(), "wmic", "csproduct", "get", "uuid")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "ERR_WINDOWS"
@@ -73,13 +73,14 @@ func GetUniqueAddress() string {
 }
 
 func PingCMD(ip string, timeout time.Duration) *exec.Cmd {
-	return CMD("ping", "-n", "1", "-w", fmt.Sprintf("%d", timeout.Milliseconds()), ip)
+	return CMD(GetCurrentDir(), "ping", "-n", "1", "-w", fmt.Sprintf("%d", timeout.Milliseconds()), ip)
 }
-func CMD(name string, args ...string) *exec.Cmd {
+func CMD(dir string, name string, args ...string) *exec.Cmd {
 	cmd := exec.Command(name, args...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		HideWindow: true,
 	}
+	cmd.Dir = dir
 	return cmd
 }
 func openExp(fpath string) error {

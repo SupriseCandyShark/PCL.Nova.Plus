@@ -38,11 +38,13 @@ func GetOtherDir() (string, error) {
 	return currentUser.HomeDir, nil
 }
 func PingCMD(ip string, timeout time.Duration) *exec.Cmd {
-	return CMD("ping", "-c", "1", "-W", fmt.Sprintf("%.0f", timeout.Seconds()), ip)
+	return CMD(GetCurrentDir(), "ping", "-c", "1", "-W", fmt.Sprintf("%.0f", timeout.Seconds()), ip)
 }
 
-func CMD(name string, args ...string) *exec.Cmd {
-	return exec.Command(name, args...)
+func CMD(dir string, name string, args ...string) *exec.Cmd {
+	cmd := exec.Command(name, args...)
+	cmd.Dir = dir
+	return cmd
 }
 
 func openExp(fpath string) error {

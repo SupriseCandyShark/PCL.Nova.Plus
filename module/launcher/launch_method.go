@@ -157,7 +157,7 @@ func (lm *LaunchMethod) GetCurrentMinecraftDir() string {
 }
 
 func (lm *LaunchMethod) GetJavaInfo(path string) ExceptionHandler[JavaConfig] {
-	cmd := CMD(path, "-XshowSettings:properties", "-version")
+	cmd := CMD(GetCurrentDir(), path, "-XshowSettings:properties", "-version")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return NewExceptionHandler(500, false, "Command failed with: "+err.Error(), JavaConfig{})
@@ -404,7 +404,7 @@ func (lm *LaunchMethod) LaunchGame(exportArguments bool, showAccessToken bool) E
 					runtime.EventsEmit(lm.Ctx, "launch_log", str)
 				}
 			}
-			cmd := CMD(back[0], back[1:]...)
+			cmd := CMD(option.RootPath(), back[0], back[1:]...)
 			var wg sync.WaitGroup
 			wg.Add(2)
 			stdout, err := cmd.StdoutPipe()
