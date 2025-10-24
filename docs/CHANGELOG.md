@@ -1,28 +1,6 @@
+# 如果你有任何的问题，请优先进入 Github 链接提出你的 issue！
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 如果是游戏崩溃问题，请提供你的 `版本 JSON`、`启动参数`、`平台（Windows、macOS、Linux）` 在 Github Issue 上！
 
 # 0.0.18
 
@@ -294,8 +272,3 @@
 1. 首次公开发布，用时两周
 2. 目前更新自定义控件：MyDialog（自定义信息框）、MyLoading（自定义加载框）、MySelectCard（自定义下拉卡片）等一系列自定义组件
 3. 更新了黑暗模式
-
-
-# 如果你有任何的问题，请优先进入 Github 链接提出你的 issue！
-
-# 如果是游戏崩溃问题，请提供你的 `版本 JSON`、`启动参数`、`平台（Windows、macOS、Linux）` 在 Github Issue 上！
