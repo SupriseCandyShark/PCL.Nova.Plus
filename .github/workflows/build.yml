@@ -144,8 +144,8 @@ jobs:
                   if [[ ${{matrix.build.os}} =~ "windows" ]]; then
                     mv ./build/bin/PCL.Nova.Plus.exe ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
                   elif [[ "${{matrix.build.os}}" == "macos-latest" ]]; then
-                    zip -9 -r "./build/bin/PCL.Nova.Plus.app.zip" ./build/bin
-                    mv ./build/bin/PCL.Nova.Plus.app.zip ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.zip
+                    mkdir ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
+                    mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}/PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
                   elif [[ "${{matrix.build.os}}" =~ "ubuntu" ]]; then
                     mv ./build/bin/PCL.Nova.Plus ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
                   fi
@@ -160,7 +160,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.zip
+                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
             - name: Upload all Artifacts Linux
               if: ${{matrix.build.os == 'ubuntu-24.04-arm' || matrix.build.os == 'ubuntu-latest'}}
               uses: actions/upload-artifact@v4
