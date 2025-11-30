@@ -58,18 +58,6 @@ body {
 details {
     cursor: pointer;
 }
-.code {
-    box-shadow: 0 0 3px black;
-    background-color: lightgray;
-    border-radius: 4px;
-    color: black;
-    padding: 0 5px;
-    user-select: all;
-    -webkit-user-select: all;
-    -moz-user-select: all;
-    -ms-user-select: all;
-    font-size: 14px;
-}
 .side-icon {
     vertical-align: middle;
     width: 20px;

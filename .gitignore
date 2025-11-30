@@ -13,6 +13,7 @@ go.sum
 my/
 .mixin.out/
 logs/
+frontend/wailsjs/
 mmcll_test.go
 wailsbuild.sh
 wailsdev.sh

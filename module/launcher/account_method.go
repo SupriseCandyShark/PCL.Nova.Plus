@@ -32,13 +32,13 @@ type AccountMethod struct {
 	Ctx context.Context
 }
 
-func CutHeadSkin(data []byte) ([]byte, error) {
+func CutHeadSkin(data []byte, isInner bool) ([]byte, error) {
 	img, _, err := image.Decode(bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
 	}
 	rgba := img.(*image.NRGBA)
-	subHead := rgba.SubImage(image.Rect(8, 8, 16, 16)).(*image.NRGBA)
+	subHead := rgba.SubImage(image.Rect(mmcll.If(isInner, 8, 40).(int), 8, mmcll.If(isInner, 16, 48).(int), 16)).(*image.NRGBA)
 	var buf bytes.Buffer
 	err = png.Encode(&buf, subHead)
 	if err != nil {
@@ -174,11 +174,15 @@ func (m *AccountMethod) GetUserHeadSkin(uuid string) ExceptionHandler[string] {
 		return exception(err)
 	}
 	// 以下是经过裁剪的！如果不需要裁剪，请删掉以下片段，并且将上述 skinValue 直接包装成 base64！
-	resImg, err := CutHeadSkin(skinValue)
+	resImgInner, err := CutHeadSkin(skinValue, true)
 	if err != nil {
 		return exception(err)
 	}
-	result := base64.StdEncoding.EncodeToString(resImg)
+	resImgOuter, err := CutHeadSkin(skinValue, false)
+	if err != nil {
+		return exception(err)
+	}
+	result := base64.StdEncoding.EncodeToString(resImgInner) + "**" + base64.StdEncoding.EncodeToString(resImgOuter)
 	return NewExceptionHandler(200, true, "OK!", result)
 }
 
@@ -253,11 +257,15 @@ func (m *AccountMethod) GetThirdHeadSkin(server, uuid string) ExceptionHandler[s
 	if err != nil {
 		return exception(err)
 	}
-	resImg, err := CutHeadSkin(skinValue)
+	resImgInner, err := CutHeadSkin(skinValue, true)
 	if err != nil {
 		return exception(err)
 	}
-	result := base64.StdEncoding.EncodeToString(resImg)
+	resImgOuter, err := CutHeadSkin(skinValue, false)
+	if err != nil {
+		return exception(err)
+	}
+	result := base64.StdEncoding.EncodeToString(resImgInner) + "**" + base64.StdEncoding.EncodeToString(resImgOuter)
 	return NewExceptionHandler(200, true, "OK!", result)
 }
 func (m *AccountMethod) GetThirdAPAccessToken(server, username, password string) ExceptionHandler[[]AccountType] {

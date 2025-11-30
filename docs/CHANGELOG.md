@@ -2,6 +2,16 @@
 
 # 如果是游戏崩溃问题，请提供你的 `版本 JSON`、`启动参数`、`平台（Windows、macOS、Linux）` 在 Github Issue 上！
 
+# 0.0.18.1
+
+### fix
+
+1. fix(OnlineText): 修复了【联机界面】的文本错误 (#14)
+2. fix(TodayLucky): 修复了在该电脑并未打开过任何一次 `PCL` 时，可能会遇到写入注册表时出现错误
+3. fix(About): 将 3TProject 换成了 SupriseCandyShark！
+4. fix(Mod): 修复了 Mod 显示标签的问题！（简单来说就是把文字缩小了两个像素）(#6)
+5. fix(AccountAvatar): 修复了【账号】头像双层的问题！现在头像是纯方形的，并且现在应该可以正常显示账号头像是双层了！(#8)
+
 # 0.0.18
 
 ### feat

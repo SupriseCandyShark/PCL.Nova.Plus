@@ -50,8 +50,21 @@
     }
     onMount(async () => {
         let config = await GetAccountConfig();
+        select_account.set([])
         select_account.update((account) => {
-            Object.assign(account, config.data.accounts);
+            for(let i = 0; i < config.data.accounts.length; i++) {
+                let acc = config.data.accounts[i];
+                let splitSkin = acc.head_skin.split("**")
+                console.log(splitSkin)
+                account.push(acc);
+                account[i].innerSkin = splitSkin[0]
+                if (splitSkin.length === 1) {
+                    account[i].outerSkin = ''
+                }else{
+                    account[i].outerSkin = splitSkin[1]
+                }
+            }
+            // Object.assign(account, config.data.accounts);
             return account;
         });
         let index = await ReadConfig(
@@ -108,11 +121,12 @@
                             isChecked={index === $current_account_index}
                             style_in="margin-left: 5px"
                         />
-                        <img
-                            src="data:image/png;base64,{account.head_skin}"
-                            alt="头像"
-                            class="a-avatar"
-                        />
+                        <div class="a-avatar">
+                            <img alt="头像内层" src="data:img/png;base64,{account.innerSkin}" class="inner-skin" style={account.outerSkin !== '' ? "width: 36px; height: 36px; top: 2px; left: 2px; filter: grayscale(0.13);" : 'width: 40px; height: 40px; top: 0; left: 0;'}/>
+                            {#if account.outerSkin !== ''}
+                                <img alt="头像外层" src="data:img/png;base64,{account.outerSkin}" class="outer-skin" />
+                            {/if}
+                        </div>
                         <div class="info" style="pointer-events: none">
                             <MyNormalSpan>{account.name}</MyNormalSpan>
                             <MyNormalSpan
@@ -190,6 +204,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        overflow: auto;
     }
     #account-list {
         display: flex;
@@ -220,10 +235,22 @@
     .a-avatar {
         width: 40px;
         height: 40px;
-        image-rendering: pixelated;
-        border-radius: 10px;
-        box-shadow: 0 0 5px gray;
+        /* box-shadow: 0 0 5px gray; */
         margin-left: 5px;
+        position: relative;
+    }
+    .a-avatar img {
+        image-rendering: pixelated;
+        position: absolute;
+    }
+    .a-avatar .inner-skin {
+        box-shadow: 0 0 3px gray;
+    }
+    .a-avatar .outer-skin {
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 40px;
     }
     .a-account:hover {
         background-color: rgba(128, 128, 128, 0.5);

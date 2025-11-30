@@ -4,6 +4,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import MyNormalSpan from "../input/MyNormalSpan.svelte";
+    import MyCodeSpan from "../input/MyCodeSpan.svelte";
 
     export let image_url = "";
     export let mod_name = "";
@@ -29,10 +30,10 @@
             </MyNormalSpan><span class="comp-description">| {mod_id}</span>
         </div>
         <div class="comp-center">
-            {#each libraries as lib}<span
-                    class="code"
-                    style="user-select: none;">{lib}</span
-                >{/each}
+            {#each libraries as lib, index}
+                <MyCodeSpan
+                    style_in={'user-select: none;' + (index === 0 ? 'margin-left: 1px;' : 'margin-left: 5px;')}>{lib}</MyCodeSpan>
+            {/each}
             <span class="comp-description">{description}</span>
         </div>
         <div class="comp-footer">
@@ -141,10 +142,10 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .comp-center .code {
+    .comp-center span {
         margin-left: 5px;
     }
-    .comp-center .code:first-child {
+    .comp-center span:first-child {
         margin-left: 1px;
     }
 </style>

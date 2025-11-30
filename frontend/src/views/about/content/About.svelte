@@ -6,7 +6,7 @@
     // 导入图片
     import Xphost from "../../../assets/images/Heads/xphost.jpg";
     import FireDragon0659 from "../../../assets/images/Heads/firedragon0659.jpg";
-    import T3Project from "../../../assets/images/Heads/3T.png";
+    import CandyShark from "../../../assets/images/Heads/CandyShark.png";
     import NovaPlus from "../../../assets/images/NovaPlus.png";
     import LtCatt from "../../../assets/images/Heads/ltcatt.jpg";
     import MoYuan from "../../../assets/images/Heads/moyuan.jpg";
@@ -14,6 +14,7 @@
     import MyCardButton from "../../../component/button/MyCardButton.svelte";
     import { dark_mode, launcher_version } from "../../../store/changeBody";
     import Afdian from "../../../assets/images/afdian.ico";
+    import MyCodeSpan from "../../../component/input/MyCodeSpan.svelte";
 
     export let slide = null;
     export let after_leave = null;
@@ -73,9 +74,9 @@
             ],
         },
         {
-            avatar: T3Project,
-            title: "T3 Project",
-            desc: "T3 Project 开发团队",
+            avatar: CandyShark,
+            title: "Candy Shark",
+            desc: "惊喜糖鲨开发团队",
             buttons: [
                 {
                     title: "Github 主页",
@@ -287,39 +288,53 @@
             <div style="margin: 0 20px; width: calc(100% - 40px)">
                 <MyNormalSpan>PCL.Nova.Plus（游戏主程序）</MyNormalSpan>
                 <br />
-                <span class="gray">GNU-GPL v3</span>&nbsp;<span class="code"
-                    >https://github.com/3TProject/PCL.Nova.Plus</span
-                ><br />
+                <span class="gray">GNU-GPL v3</span>
+                <MyCodeSpan>
+                    https://github.com/SupriseCandyShark/PCL.Nova.Plus
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>Wails（WebView程序）</MyNormalSpan>
                 <br />
-                <span class="gray">MIT</span>&nbsp;<span class="code"
-                    >https://github.com/wailsapp/wails</span
-                ><br />
+                <span class="gray">MIT</span>
+                <MyCodeSpan>
+                    https://github.com/wailsapp/wails
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>Golang（后端语言）</MyNormalSpan>
                 <br />
-                <span class="gray">BSD 3</span>&nbsp;<span class="code"
-                    >https://github.com/golang/go</span
-                ><br />
+                <span class="gray">BSD 3</span>
+                <MyCodeSpan>
+                    https://github.com/golang/go
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>Svelte（前端架构）</MyNormalSpan>
                 <br />
-                <span class="gray">MIT</span>&nbsp;<span class="code"
-                    >https://github.com/sveltejs/svelte</span
-                ><br />
+                <span class="gray">MIT</span>
+                <MyCodeSpan>
+                    https://github.com/sveltejs/svelte
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>TypeScript（前端语言）</MyNormalSpan>
                 <br />
-                <span class="gray">Apache License 2.0</span>&nbsp;<span
-                    class="code">https://github.com/microsoft/TypeScript</span
-                ><br />
+                <span class="gray">Apache License 2.0</span>
+                <MyCodeSpan>
+                    https://github.com/microsoft/TypeScript
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>MMCLL（启动器类库）</MyNormalSpan>
                 <br />
-                <span class="gray">MIT</span>&nbsp;<span class="code"
-                    >https://github.com/xphost008/MMCLL</span
-                ><br />
+                <span class="gray">MIT</span>
+                <MyCodeSpan>
+                    https://github.com/xphost008/mmcll
+                </MyCodeSpan>
+                <br />
                 <MyNormalSpan>skinview3d</MyNormalSpan>
                 <br />
-                <span class="gray">MIT</span>&nbsp;<span class="code"
-                    >https://github.com/bs-community/skinview3d</span
-                ><br />
+                <span class="gray">MIT</span>
+                <MyCodeSpan>
+                    https://github.com/bs-community/skinview3d
+                </MyCodeSpan>
+                <br />
             </div>
         </div>
     </MySelectCard>

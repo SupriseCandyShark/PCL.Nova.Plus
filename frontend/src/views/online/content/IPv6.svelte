@@ -37,7 +37,7 @@
             let meta = await GetAllIPv6();
             if (!meta.status || meta.data.length <= 0) {
                 loading_text =
-                    "无法加载 IPv6，您可能目前暂未拥有 IPv6！<br>如果你确保你本机拥有 IPv6，请尝试使用 sudo 或者管理员权限再次打开次界面！";
+                    "无法加载 IPv6，您可能目前暂未拥有 IPv6！<br>如果你确保你本机拥有 IPv6，请尝试使用 sudo 或者管理员权限再次打开此界面！";
                 loading_state = true;
                 return;
             }

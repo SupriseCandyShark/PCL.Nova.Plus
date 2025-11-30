@@ -73,8 +73,8 @@ jobs:
               run: |
                   pacman -S --noconfirm mingw-w64-clang-aarch64-gcc-compat
                   # export PATH=$PATH:/c/msys64/opt/bin
-                  pacman -Ql mingw-w64-clang-aarch64-gcc-compat | grep 'bin.*\.exe'
-                  /clangarm64/bin/aarch64-w64-mingw32-gcc -v
+                  # pacman -Ql mingw-w64-clang-aarch64-gcc-compat | grep 'bin.*\.exe'
+                  # /clangarm64/bin/aarch64-w64-mingw32-gcc -v
             - name: Install Linux Dependency
               shell: bash
               if: runner.os == 'Linux'
@@ -84,7 +84,7 @@ jobs:
             - name: Install Golang
               uses: actions/setup-go@v6
               with:
-                  go-version: stable
+                  go-version: '1.25.4'
             - name: Install Nodes
               uses: actions/setup-node@v5
               with:

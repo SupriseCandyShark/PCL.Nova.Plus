@@ -50,11 +50,16 @@ func GetPCL2Identify() string {
 		return "ERR_1"
 	}
 	str = strings.Trim(strings.ToUpper(str), "{}")
-	key2, _ := registry.OpenKey(registry.CURRENT_USER, "Software\\PCL", registry.WRITE|registry.READ)
+	key2, err := registry.OpenKey(registry.CURRENT_USER, "Software\\PCL", registry.WRITE|registry.READ|registry.CREATE_SUB_KEY|registry.SET_VALUE)
+	if err != nil {
+		key2, _, _ = registry.CreateKey(registry.CURRENT_USER, "Software\\PCL", registry.WRITE|registry.READ|registry.CREATE_SUB_KEY|registry.SET_VALUE)
+	}
 	defer key2.Close()
 	str2, _, err := key2.GetStringValue("Identify")
 	if err != nil {
-		if err := key2.SetStringValue("Identify", getTimestampIdentify()); err != nil {
+		str2 = getTimestampIdentify()
+		if err := key2.SetStringValue("Identify", str2); err != nil {
+			println(err)
 			return "ERR_2"
 		}
 	}
