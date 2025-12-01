@@ -1,31 +1,25 @@
 name: "Bug 反馈"
-description: "报告 PCL.Nova.Plus 中的 Bug。"
+description: "报告 PCL.Nova.Plus 中出现的 Bug"
 labels: "bug"
 
 title: "[Bug] "
 
 body:
-- type: checkboxes
-  id: checklist
+- type: markdown
   attributes:
-    label: "检查单"
-    description: "请确认："
-    options:
-      - label: "我已将启动器更新至最新版。"
-        required: true
-      - label: "该问题没有被其他人报告过。"
-        required: true
+    value: |
+      **请确认您已将启动器更新至最新版，并且该问题没有被报告过！查看 [Issue 列表](https://github.com/SupriseCandyShark/PCL.Nova.Plus/issues)**
 - type: textarea
   id: description
   attributes:
-    label: 描述
-    placeholder: "请详细描述遇到的问题。"
+    label: 问题描述
+    placeholder: "详细描述遇到的问题"
   validations:
     required: true
 - type: textarea
   id: steps
   attributes:
-    label: 复现方式
+    label: 复现步骤
     placeholder: |
       1. xxx
       2. xxx
