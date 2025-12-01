@@ -1,0 +1,35 @@
+name: "新功能建议"
+description: "为 PCL.Nova.Plus 提出一个主意。"
+
+title: "[Feature] "
+
+body:
+- type: checkboxes
+  id: checklist
+  attributes:
+    label: "检查单"
+    description: "请确认："
+    options:
+      - label: "Issue 列表中没有重复的建议。"
+        required: true
+- type: textarea
+  id: feature
+  attributes:
+    label: 描述
+    placeholder: "请描述你需要的新功能。"
+  validations:
+    required: true
+- type: textarea
+  id: scenario
+  attributes:
+    label: 原因
+    placeholder: "为什么这个功能对你有帮助?"
+  validations:
+    required: true
+- type: textarea
+  id: etc
+  attributes:
+    label: 详细信息
+    placeholder: "你还想补充什么？比如实现方式、参考链接等。"
+  validations:
+    required: false
