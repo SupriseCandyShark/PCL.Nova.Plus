@@ -30,8 +30,23 @@
    1. mmcll.LauncherName ==> 启动器名称（仅启动游戏时需要）
    2. mmcll.LauncherVersion ==> 启动器版本（界面上会显示）
    3. mmcll.LauncherUserAgent ==> 启动器请求UserAgent（请求网站默认附带的 UserAgent）
-   4. launcher.XApiKey ==> CurseForge 的 APIKey（如果你没有，你只是无法获取 CurseForge 网站内容，但是你依旧可以正常使用启动器其他内容！）
-   5. launcher.ClientId ==> Microsoft 的 ClientId（如果你没有，你只是无法登录 Microsoft 正版，但是你依旧可以正常使用启动器其他内容！）
-   6. launcher.PrivacyKey ==> 构建密钥（原作者专属，你们可以无需赋值并在意）
+   4. launcher.CF_KEY ==> CurseForge 的 APIKey（如果你没有，你只是无法获取 CurseForge 网站内容，但是你依旧可以正常使用启动器其他内容！）
+   5. launcher.MS_KEY ==> Microsoft 的 ClientId（如果你没有，你只是无法登录 Microsoft 正版，但是你依旧可以正常使用启动器其他内容！）
+   6. launcher.PV_KEY ==> 构建密钥（原作者专属，你们可以无需赋值并在意）
+   7. launcher.LS_KEY ==> LittleSkin 密钥！如果你没有，你仅仅只是无法使用 LittleSkin 的 OAuth 登录，仅此而已。。但是你依旧可以输入账号密码登录！
+   8. launcher.logLevel ==> Log 等级，默认为 Info，当然你也可以做成 debug！
 
-- 大概有以上 6 个值需要赋值，因此
+- 大概有以上 7 个值需要手动赋值，因此请赋值了之后，再尝试调试代码！或者您也可以无需赋值！因为 LauncherName 默认是 MMCLL、LauncherUserAgent 默认也是 MMCLL💦LauncherVersion 默认是 undefined，因为你没从外部赋值。
+- 各位可以类似于如下赋值：
+```bat
+@echo off
+set CF_KEY=<Your CF Key>
+set MS_KEY=<Your MS Key>
+set LS_KEY=<Your LS Key>
+set PV_KEY=<Do Not Enter>
+set LOG_LEVEL=DEBUG
+set /P VER=<./VERSION
+set PRE_VER=%str:-=&:%
+wails dev -ldflags "-X 'NovaPlus/module/mmcll.LauncherVersion=%VER%' -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/%PRE_VER%' -X 'NovaPlus/module/launcher.CF_KEY=%CF_KEY%' -X 'NovaPlus/module/launcher.MS_KEY=%MS_KEY%' -X 'NovaPlus/module/launcher.PV_KEY=%PV_KEY%' -X 'NovaPlus/module/launcher.LS_KEY=%LS_KEY%' -X 'main.logLevel=%LOG_LEVEL%'"
+```
+即可正确运行到 PCL.Nova.Plus！
