@@ -43,6 +43,8 @@
 | new_shop | `name/string`, `initial/int` | `shop` | 定义一个商店，initial的意思是初始金币，后续会随着购买次数增长而指数型增长（每买一次价格翻一倍） |
 | add_shop | `level/int`, `x/int`, `y/int`, `shop/shop` | `bool` | 新增一个商店。 |
 | play_sound | `name/string` | `bool` | 播放一段音乐。 |
+| add_upstairs | `level/int`, `x/int`, `y/int` | `bool` | 新增一个上楼梯 |
+| add_downstairs | `level/int`, `x/int`, `y/int` | `bool` | 新增一个下楼梯 |
 
 ok！上述就是目前 魔塔游戏 里所有的交互函数啦！
 
@@ -50,7 +52,7 @@ ok！上述就是目前 魔塔游戏 里所有的交互函数啦！
 
 我们可以找到【`Nova` 配置文件的 `MagicTower` 下面的 与`lua`文件同名的文件夹里，将图片资源保存到里面。其中，里面的目录大致如下：】
 
-lua同名文件\
+lua同名文件夹\
 ├─ assets\
 │   ├─ monster\
 │   │   ├─ \[name\].png\
