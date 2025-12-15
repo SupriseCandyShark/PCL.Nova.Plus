@@ -1,169 +1,177 @@
 name: Wails build
 
 on:
-    # workflow_dispatch:
-    push:
-        branches: [dev, main]
+  workflow_dispatch:
+  push:
+    branches: [dev, main]
+    paths:
+      - '.github/workflows/**'
+      - 'build/**'
+      - 'frontend/**'
+      - 'module/**'
+      - 'go.mod'
+      - 'main.go'
+      - 'VERSION'
+      - 'wails.json'
 
 env:
-    NODE_OPTIONS: "--max-old-space-size=4096"
+  NODE_OPTIONS: "--max-old-space-size=4096"
 
 jobs:
-    build:
-        strategy:
-            fail-fast: false
-            matrix:
-                build:
-                    # Linux amd64 构建
-                    - name: "PCL.Nova.Plus-Linux-amd64"
-                      platform: "linux/amd64"
-                      os: "ubuntu-latest"
-                      realOs: "Linux-amd64"
-                    # Windows amd64 构建
-                    - name: "PCL.Nova.Plus-Windows-amd64"
-                      platform: "windows/amd64"
-                      os: "windows-latest"
-                      realOs: "Windows-amd64"
-                    # macOS 通用 构建
-                    - name: "PCL.Nova.Plus-macOS-universal"
-                      platform: "darwin/universal"
-                      os: "macos-latest"
-                      realOs: "macOS-universal"
-                    # Linux arm 构建
-                    - name: "PCL.Nova.Plus-Linux-arm64"
-                      platform: "linux/arm64"
-                      os: "ubuntu-24.04-arm"
-                      realOs: "Linux-arm64"
-                    # Windows arm 构建
-                    - name: "PCL.Nova.Plus-Windows-arm64"
-                      platform: "windows/arm64"
-                      os: "windows-11-arm"
-                      realOs: "Windows-arm64"
-
-        runs-on: ${{ matrix.build.os }}
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  submodules: recursive
-            - run: git config --global core.autocrlf input
-            # - name: Install Wails
-            #   uses: dAppServer/wails-build-action@main
-            #   id: build
-            #   with:
-            #       build-name: ${{ matrix.build.name }}
-            #       build-platform: ${{ matrix.build.platform }}
-            #       go-version: "1.24"
-            #       node-version: "23"
-            #       package: false
-            - name: Install msys2
-              if: ${{ matrix.build.os == 'windows-11-arm' }}
-              uses: msys2/setup-msys2@v2
-              with:
-                  msystem: CLANGARM64
-              # shell: pwsh
-              # run: |
-              #     Set-ExecutionPolicy RemoteSigned -scope CurrentUser
-              #     irm get.scoop.sh | iex
-              #     scoop bucket add extras
-              #     scoop install gcc-aarch64-none-linux-gnu
-            - name: View aarch64 gcc
-              if: ${{ matrix.build.os == 'windows-11-arm' }}
-              shell: msys2 {0}
-              run: |
-                  pacman -S --noconfirm mingw-w64-clang-aarch64-gcc-compat
-                  # export PATH=$PATH:/c/msys64/opt/bin
-                  # pacman -Ql mingw-w64-clang-aarch64-gcc-compat | grep 'bin.*\.exe'
-                  # /clangarm64/bin/aarch64-w64-mingw32-gcc -v
-            - name: Install Linux Dependency
-              shell: bash
-              if: runner.os == 'Linux'
-              run: |
-                  sudo apt-get -yq update
-                  sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.1-dev gcc-aarch64-linux-gnu
-            - name: Install Golang
-              uses: actions/setup-go@v6
-              with:
-                  go-version: '1.25.4'
-            - name: Install Nodes
-              uses: actions/setup-node@v5
-              with:
-                  node-version: 23
-            - name: Install wails
-              shell: bash
-              run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-            - name: Read Version
-              id: version
-              shell: bash
-              run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
-            - name: Build Wails App
-              if: ${{ matrix.build.os != 'windows-11-arm' }}
-              shell: bash
-              run: |
-                  cfKey=${{secrets.CF_KEY}}
-                  msKey=${{secrets.MS_KEY}}
-                  lsKey=${{secrets.LS_KEY}}
-                  pvKey=${{secrets.PV_KEY}}
-                  ver=${{steps.version.outputs.version}}
-                  rver=${ver%-*}
-                  wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
-                  "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
-                  -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
-                  -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
-                  -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
-                  -X 'NovaPlus/module/launcher.MS_KEY=$msKey' \
-                  -X 'NovaPlus/module/launcher.PV_KEY=$pvKey' \
-                  -X 'NovaPlus/module/launcher.LS_KEY=$lsKey'"
-              env:
-                  CGO_ENABLED: 1
-            - name: Build Wails App for Windows 11 ARM
-              if: ${{ matrix.build.os == 'windows-11-arm' }}
-              shell: msys2 {0}
-              run: |
-                  cfKey=${{secrets.CF_KEY}}
-                  msKey=${{secrets.MS_KEY}}
-                  lsKey=${{secrets.LS_KEY}}
-                  pvKey=${{secrets.PV_KEY}}
-                  ver=${{steps.version.outputs.version}}
-                  rver=${ver%-*}
-                  wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
-                  "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
-                  -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
-                  -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
-                  -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
-                  -X 'NovaPlus/module/launcher.MS_KEY=$msKey' \
-                  -X 'NovaPlus/module/launcher.PV_KEY=$pvKey' \
-                  -X 'NovaPlus/module/launcher.LS_KEY=$lsKey'"
-              env:
-                  CC: /clangarm64/bin/aarch64-w64-mingw32-gcc
-                  CGO_ENABLED: 1
-                  MSYS2_PATH_TYPE: inherit
-            - name: Rename Executable File
-              shell: bash
-              run: |
-                  if [[ ${{matrix.build.os}} =~ "windows" ]]; then
-                    mv ./build/bin/PCL.Nova.Plus.exe ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
-                  elif [[ "${{matrix.build.os}}" == "macos-latest" ]]; then
-                    mkdir ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
-                    mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}/PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
-                  elif [[ "${{matrix.build.os}}" =~ "ubuntu" ]]; then
-                    mv ./build/bin/PCL.Nova.Plus ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
-                  fi
-            - name: Upload all Artifacts Windows
-              if: ${{matrix.build.os == 'windows-latest' || matrix.build.os == 'windows-11-arm'}}
-              uses: actions/upload-artifact@v4
-              with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
-            - name: Upload all Artifacts macOS
-              if: ${{matrix.build.os == 'macos-latest'}}
-              uses: actions/upload-artifact@v4
-              with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
-            - name: Upload all Artifacts Linux
-              if: ${{matrix.build.os == 'ubuntu-24.04-arm' || matrix.build.os == 'ubuntu-latest'}}
-              uses: actions/upload-artifact@v4
-              with:
-                  name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
-                  path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          # Linux amd64 构建
+          - name: "PCL.Nova.Plus-Linux-amd64"
+            platform: "linux/amd64"
+            os: "ubuntu-latest"
+            realOs: "Linux-amd64"
+          # Windows amd64 构建
+          - name: "PCL.Nova.Plus-Windows-amd64"
+            platform: "windows/amd64"
+            os: "windows-latest"
+            realOs: "Windows-amd64"
+          # macOS 通用 构建
+          - name: "PCL.Nova.Plus-macOS-universal"
+            platform: "darwin/universal"
+            os: "macos-latest"
+            realOs: "macOS-universal"
+          # Linux arm 构建
+          - name: "PCL.Nova.Plus-Linux-arm64"
+            platform: "linux/arm64"
+            os: "ubuntu-24.04-arm"
+            realOs: "Linux-arm64"
+          # Windows arm 构建
+          - name: "PCL.Nova.Plus-Windows-arm64"
+            platform: "windows/arm64"
+            os: "windows-11-arm"
+            realOs: "Windows-arm64"
+    runs-on: ${{ matrix.build.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - run: git config --global core.autocrlf input
+      # - name: Install Wails
+      #   uses: dAppServer/wails-build-action@main
+      #   id: build
+      #   with:
+      #       build-name: ${{ matrix.build.name }}
+      #       build-platform: ${{ matrix.build.platform }}
+      #       go-version: "1.24"
+      #       node-version: "23"
+      #       package: false
+      - name: Install msys2
+        if: ${{ matrix.build.os == 'windows-11-arm' }}
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANGARM64
+        # shell: pwsh
+        # run: |
+        #     Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+        #     irm get.scoop.sh | iex
+        #     scoop bucket add extras
+        #     scoop install gcc-aarch64-none-linux-gnu
+      - name: View aarch64 gcc
+        if: ${{ matrix.build.os == 'windows-11-arm' }}
+        shell: msys2 {0}
+        run: |
+          pacman -S --noconfirm mingw-w64-clang-aarch64-gcc-compat
+          # export PATH=$PATH:/c/msys64/opt/bin
+          # pacman -Ql mingw-w64-clang-aarch64-gcc-compat | grep 'bin.*\.exe'
+          # /clangarm64/bin/aarch64-w64-mingw32-gcc -v
+      - name: Install Linux Dependency
+        shell: bash
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get -yq update
+          sudo apt-get -yq install libgtk-3-0 libwebkit2gtk-4.1-dev gcc-aarch64-linux-gnu
+      - name: Install Golang
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.25.4'
+      - name: Install Nodes
+        uses: actions/setup-node@v5
+        with:
+          node-version: 23
+      - name: Install wails
+        shell: bash
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      - name: Read Version
+        id: version
+        shell: bash
+        run: echo "version=$(cat VERSION)" >> $GITHUB_OUTPUT
+      - name: Build Wails App
+        if: ${{ matrix.build.os != 'windows-11-arm' }}
+        shell: bash
+        run: |
+          cfKey=${{secrets.CF_KEY}}
+          msKey=${{secrets.MS_KEY}}
+          lsKey=${{secrets.LS_KEY}}
+          pvKey=${{secrets.PV_KEY}}
+          ver=${{steps.version.outputs.version}}
+          rver=${ver%-*}
+          wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
+          "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
+          -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
+          -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
+          -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
+          -X 'NovaPlus/module/launcher.MS_KEY=$msKey' \
+          -X 'NovaPlus/module/launcher.PV_KEY=$pvKey' \
+          -X 'NovaPlus/module/launcher.LS_KEY=$lsKey'"
+        env:
+          CGO_ENABLED: 1
+      - name: Build Wails App for Windows 11 ARM
+        if: ${{ matrix.build.os == 'windows-11-arm' }}
+        shell: msys2 {0}
+        run: |
+          cfKey=${{secrets.CF_KEY}}
+          msKey=${{secrets.MS_KEY}}
+          lsKey=${{secrets.LS_KEY}}
+          pvKey=${{secrets.PV_KEY}}
+          ver=${{steps.version.outputs.version}}
+          rver=${ver%-*}
+          wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
+          "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
+          -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
+          -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
+          -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
+          -X 'NovaPlus/module/launcher.MS_KEY=$msKey' \
+          -X 'NovaPlus/module/launcher.PV_KEY=$pvKey' \
+          -X 'NovaPlus/module/launcher.LS_KEY=$lsKey'"
+        env:
+          CC: /clangarm64/bin/aarch64-w64-mingw32-gcc
+          CGO_ENABLED: 1
+          MSYS2_PATH_TYPE: inherit
+      - name: Rename Executable File
+        shell: bash
+        run: |
+          if [[ ${{matrix.build.os}} =~ "windows" ]]; then
+            mv ./build/bin/PCL.Nova.Plus.exe ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
+          elif [[ "${{matrix.build.os}}" == "macos-latest" ]]; then
+            mkdir ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
+            mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}/PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
+          elif [[ "${{matrix.build.os}}" =~ "ubuntu" ]]; then
+            mv ./build/bin/PCL.Nova.Plus ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
+          fi
+      - name: Upload all Artifacts Windows
+        if: ${{matrix.build.os == 'windows-latest' || matrix.build.os == 'windows-11-arm'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+          path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
+      - name: Upload all Artifacts macOS
+        if: ${{matrix.build.os == 'macos-latest'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+          path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
+      - name: Upload all Artifacts Linux
+        if: ${{matrix.build.os == 'ubuntu-24.04-arm' || matrix.build.os == 'ubuntu-latest'}}
+        uses: actions/upload-artifact@v4
+        with:
+          name: PCL-Nova-Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}-Bundle
+          path: ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
