@@ -153,7 +153,7 @@ jobs:
             mv ./build/bin/PCL.Nova.Plus.exe ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.exe
           elif [[ "${{matrix.build.os}}" == "macos-latest" ]]; then
             mkdir ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
-            mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}/PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}.app
+            mv ./build/bin/PCL.Nova.Plus.app ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}/PCL.Nova.Plus.app
           elif [[ "${{matrix.build.os}}" =~ "ubuntu" ]]; then
             mv ./build/bin/PCL.Nova.Plus ./PCL.Nova.Plus-${{steps.version.outputs.version}}-${{matrix.build.realOs}}
           fi
