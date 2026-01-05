@@ -128,13 +128,17 @@ jobs:
         if: ${{ matrix.build.os == 'windows-11-arm' }}
         shell: msys2 {0}
         run: |
-          cfKey=${{secrets.CF_KEY}}
-          msKey=${{secrets.MS_KEY}}
-          lsKey=${{secrets.LS_KEY}}
-          pvKey=${{secrets.PV_KEY}}
+          cfKey=***
+          msKey=***
+          lsKey=***
+          pvKey=***
+          # cfKey=${{secrets.CF_KEY}}
+          # msKey=${{secrets.MS_KEY}}
+          # lsKey=${{secrets.LS_KEY}}
+          # pvKey=${{secrets.PV_KEY}}
           ver=${{steps.version.outputs.version}}
           rver=${ver%-*}
-          wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
+          wails build -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
           "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
           -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
           -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
