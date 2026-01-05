@@ -33,7 +33,7 @@
     import MyInputBox from "./component/card/MyInputBox.svelte";
     import { game_log } from "./store/mc";
     import { messagebox, MSG_INFO, MSG_WARNING } from "./store/messagebox";
-    import { Quit } from "wailsjs/runtime/runtime";
+    import { Quit } from "../wailsjs/runtime/runtime";
     function ConvertDarkToRGB(dark: boolean, theme: number) {
         const d = DarkAndThemeToMain(dark, theme);
         return {
