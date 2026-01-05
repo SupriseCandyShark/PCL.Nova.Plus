@@ -9,6 +9,7 @@ export const mc_list_release = writable([]);
 export const mc_list_snapshot = writable([]);
 export const mc_list_old_beta = writable([]);
 export const mc_list_old_alpha = writable([]);
+export const mc_list_fool = writable([]);
 export const forge_list = writable({});
 export const forge_support = writable([]);
 export const fabric_list = writable([]);

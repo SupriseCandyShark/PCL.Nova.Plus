@@ -2,6 +2,23 @@
 
 # 如果是游戏崩溃问题，请提供你的 `版本 JSON`、`启动参数`、`平台（Windows、macOS、Linux）` 在 Github Issue 上！
 
+# 0.0.18.2
+
+### fix
+
+1. fix(Download): 修复了下载界面的卡片未能正确在页面底部加上margin-bottom: 10px。（加个height: auto即可）
+2. fix(Launch): 修复了在启动游戏时，Nova 未能正确的替换 Forge 老版本的键值：${primary_jar_name} 键。
+3. fix(RightBottomButton): 调整了右下角的按钮位置，现在应该会显示在 messagebox 的遮罩层下方了！不会在弹出了！
+
+### feat
+
+1. feat(Classification): 下载界面新增愚人节版本分类！以及Nova特供版本（未完成）！
+2. feat(FontSize): 稍微修复了一下字体大小（在总的css里面加上了* {font-size: 16px}，仅此而已。。）
+3. feat(QualcommTips): 在任何 Windows arm64 版本的 Nova 上，现在默认会弹出是否是高通骁龙处理器的提示了！
+    1. 除了高通骁龙处理器是 arm64 以外，还有国产麒麟芯片也是 arm64 架构，但是该架构在 HMCL 上未作提示。。
+    2. 现在会弹出一个框框，确认是否安装了 OpenGL 兼容层提示！
+4. feat(EULA): 在刚打开启动器时，会弹出一个框，提示最终用户协议！您需要点击 同意 才能正常使用启动器！
+
 # 0.0.18.1
 
 ### fix
@@ -23,7 +40,7 @@
 ### fix
 
 1. fix(Launch): 修复了许许多多的启动问题，现在应该可以启动全版本 MC 了！！【经过 macOS 测试与 Linux 测试，已经全部可以启动了（真的）】
-    - 目前启动游戏不支持 `Prism`、`MultiMC`、`XMCL` 等启动器下载的 MC，请使用 `LauncherX`、`HMCL` 等规范意义上的启动器下载 MC，随后启动！！
+    - 目前启动游戏不支持 `Prism`、`MultiMC`、`XMCL` 等启动器下载的 MC，请使用 `PCL`、`HMCL`、`BakaXL` 等规范意义上的启动器下载 MC，随后启动！！
     - 如果再有启动不了的错误，麻烦请你把游戏 `crash-report`、`启动器内导出启动参数`、`游戏版本 JSON` 一并打包成 `zip` 并发送到作者的 Github issue！
     - 如果是拼接启动参数中出现的报错，可以尝试直接给我 `游戏版本 JSON`、`启动器错误截图` 二者打包成 `zip` 并发送到作者的 Github issue！
 2. fix(macOS): 修复了 macOS 上的配置文件写出，现在应该会默认写出到 ~/Library/Application Support/PCL.Nova下了。

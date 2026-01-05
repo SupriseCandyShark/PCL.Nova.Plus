@@ -12,6 +12,7 @@
         game_log,
         latest_release,
         latest_snapshot,
+        mc_list_fool,
         mc_list_ok,
         mc_list_old_alpha,
         mc_list_old_beta,
@@ -22,6 +23,7 @@
     import CommandBlock from "../../../assets/images/Blocks/CommandBlock.png";
     import CobbleStone from "../../../assets/images/Blocks/CobbleStone.png";
     import MyCardButton from "../../../component/button/MyCardButton.svelte";
+    import GoldBlock from "../../../assets/images/Blocks/GoldBlock.png"
     import { download_list } from "../../../store/changeBody";
 
     export let slide = null;
@@ -49,7 +51,29 @@
             version: 3,
             height: 0,
         },
+        {
+            list: [],
+            version: 4,
+            height: 0,
+        },
+        {
+            list: [],
+            version: 5,
+            height: 0,
+        }
     ];
+    function isAprilFirst(dateString: string) {
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) 
+                return false;
+            const month = date.getMonth();
+            const day = date.getDate();
+            return month === 3 && day === 1;
+        } catch (error) {
+            return false;
+        }
+    }
     onMount(async () => {
         if (!$mc_list_ok) {
             loading_text = "正在获取版本列表";
@@ -70,7 +94,9 @@
                 let obj = ver[i];
                 if (obj.id! == json.latest!.release!) latest_release.set(obj);
                 if (obj.id! == json.latest!.snapshot!) latest_snapshot.set(obj);
-                if (obj.type! == "release")
+                if (isAprilFirst(obj.releaseTime!))
+                    mc_list_fool.update((value) => [...value, obj])
+                else if (obj.type! == "release")
                     mc_list_release.update((value) => [...value, obj]);
                 else if (obj.type! == "snapshot")
                     mc_list_snapshot.update((value) => [...value, obj]);
@@ -85,6 +111,7 @@
         temp_list[1].height = $mc_list_snapshot.length * 50 + 20;
         temp_list[2].height = $mc_list_old_beta.length * 50 + 20;
         temp_list[3].height = $mc_list_old_alpha.length * 50 + 20;
+        temp_list[4].height = $mc_list_fool.length * 50 + 20;
     });
     let isTransitioning = true;
 
@@ -137,6 +164,8 @@
             temp_list[2].list = isExpand ? $mc_list_old_beta : [];
         } else if (title == "远古 Alpha 版") {
             temp_list[3].list = isExpand ? $mc_list_old_alpha : [];
+        } else if (title == "愚人节版") {
+            temp_list[4].list = isExpand ? $mc_list_fool : [];
         }
     }
 </script>
@@ -158,7 +187,7 @@
             <MyLoadingPickaxe {loading_text} state={loading_state} />
         </div>
     {:else if isTransitioning}
-        <div in:slide_up out:slide_up on:outroend={control_leave}>
+        <div in:slide_up out:slide_up on:outroend={control_leave} style="height: auto;">
             <MySelectCard title="最新版本">
                 <div class="version-all">
                     <MyCardButton
@@ -279,11 +308,15 @@
                             ? "远古 Beta 版"
                             : temp.version === 3
                               ? "远古 Alpha 版"
-                              : ""}
+                              : temp.version === 4
+                                ? "愚人节版"
+                                : temp.version === 5
+                                  ? "Nova 特供" : ""}
                     on:comp={onComp}
                     maxHeight={temp.height}
                     isExpand={true}
                     canExpand={true}
+                    in_style={temp.version === 5 ? 'margin-bottom: 15px;' : ''}
                 >
                     <div class="version-all">
                         {#each temp.list as list}
@@ -296,7 +329,8 @@
                                         ? CobbleStone
                                         : temp.version === 3
                                           ? CobbleStone
-                                          : ""}
+                                          : temp.version === 4
+                                            ? GoldBlock : ""}
                                 title={list["id"]}
                                 desc={list["releaseTime"]
                                     .substring(

@@ -56,7 +56,18 @@ func GetFileSHA256(path string) (string, error) {
 
 // Operation 获取操作系统，1是windows，2是macOS，3是其他系统
 func (mm *MainMethod) Operation() int {
-	return mmcll.If(runtime2.GOOS == "windows", 1, mmcll.If(runtime2.GOOS == "darwin", 2, 3).(int)).(int)
+	arr := [5]string{"windows-amd64", "windows-arm64", "linux-amd64", "linux-arm64"}
+	if runtime2.GOOS == "darwin" {
+		return 5
+	} else {
+		os := runtime2.GOOS + "-" + runtime2.GOARCH
+		for i, v := range arr {
+			if os == v {
+				return i + 1
+			}
+		}
+		return 6
+	}
 }
 
 // EnsureConfigFile 生成所有父文件夹，以及在此处生成一个文件

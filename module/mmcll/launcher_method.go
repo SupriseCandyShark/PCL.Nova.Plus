@@ -961,6 +961,7 @@ func (lg launchGame) putArgument(realJson map[string]any, result []string) ([]st
 	lv = strings.ReplaceAll(lv, "Alpha", "")
 	lv = strings.ReplaceAll(lv, "Beta", "")
 	lv = strings.ReplaceAll(lv, "Pre", "")
+	mainJarName := filepath.Base(libs[len(libs)-1])
 	cp := strings.Join(libs, "${classpath_separator}")
 	// 下列真的是火葬场了（等待有缘人的修复吧~
 	for i := range result {
@@ -983,6 +984,7 @@ func (lg launchGame) putArgument(realJson map[string]any, result []string) ([]st
 		result[i] = strings.ReplaceAll(result[i], "${game_assets}", filepath.Join(lg.rootPath, "assets", "virtual", "legacy"))
 		result[i] = strings.ReplaceAll(result[i], "${user_properties}", "{}")
 		result[i] = strings.ReplaceAll(result[i], "${classpath_separator}", GetSeparator())
+		result[i] = strings.ReplaceAll(result[i], "${primary_jar_name}", mainJarName)
 	}
 	return result, nil
 }

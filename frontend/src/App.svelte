@@ -15,20 +15,25 @@
         GetConfigIniPath,
         ReadConfig,
         GetOtherIniPath,
+        WriteConfig,
     } from "../wailsjs/go/launcher/ReaderWriter";
     import {
         GetBackgroundImage,
+        Operation,
         Version,
     } from "../wailsjs/go/launcher/MainMethod";
     import { GetUniqueAddress, CryptoUnlock } from "../wailsjs/go/main/App";
     import {
         DarkAndThemeToMain,
+        OpenCustomURL,
         slide_opacity_transcale,
     } from "./store/functions";
     import MyMessageBox from "./component/card/MyMessageBox.svelte";
     import MyNormalHint from "./component/card/MyNormalHint.svelte";
     import MyInputBox from "./component/card/MyInputBox.svelte";
     import { game_log } from "./store/mc";
+    import { messagebox, MSG_INFO, MSG_WARNING } from "./store/messagebox";
+    import { Quit } from "wailsjs/runtime/runtime";
     function ConvertDarkToRGB(dark: boolean, theme: number) {
         const d = DarkAndThemeToMain(dark, theme);
         return {
@@ -80,9 +85,58 @@
         } else {
             backImage = ``;
         }
-        document.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-        });
+        if (
+            (await ReadConfig(await GetOtherIniPath(), "EULA", "Agree")) !== "1"
+        ) {
+            if (
+                (await messagebox(
+                    "最终用户协议",
+                    "虽然 Nova 是纯开源软件！但是你依旧需要遵守一些规定！请参考我们的最终用户协议！",
+                    MSG_INFO,
+                    ["阅读并同意", "不同意"],
+                )) === 0
+            ) {
+                OpenCustomURL(
+                    "https://github.com/SupriseCandyShark/PCL.Nova.Plus/blob/main/docs/GUIDELINES.md",
+                );
+                await WriteConfig(
+                    await GetOtherIniPath(),
+                    "EULA",
+                    "Agree",
+                    "1",
+                );
+            } else {
+                Quit();
+            }
+        }
+        if ((await Operation()) === 2) {
+            if (
+                (await ReadConfig(
+                    await GetOtherIniPath(),
+                    "Arm64",
+                    "CheckWarning",
+                )) !== "1"
+            ) {
+                let c = await messagebox(
+                    "OpenGL 兼容层提示",
+                    "检测到您目前处于 Windows arm64 环境！如果您的处理器是 高通 系列处理器，您可能需要下载 OpenGL 兼容层才能正常使用游戏。",
+                    MSG_WARNING,
+                    ["我已知晓，不再提示", "点我进入网站下载"],
+                );
+                if (c === 0) {
+                    await WriteConfig(
+                        await GetOtherIniPath(),
+                        "Arm64",
+                        "CheckWarning",
+                        "1",
+                    );
+                } else {
+                    OpenCustomURL(
+                        "https://apps.microsoft.com/detail/9nqpsl29bfff",
+                    );
+                }
+            }
+        }
     });
 </script>
 
@@ -95,9 +149,6 @@
             <Body />
         </div>
     </div>
-    <MyMessageBox />
-    <MyNormalHint />
-    <MyInputBox />
     {#if $download_list.length !== 0 && $current_view !== "downloadFile"}
         <button
             class="topButton"
@@ -150,6 +201,9 @@
             </svg>
         </button>
     {/if}
+    <MyMessageBox />
+    <MyNormalHint />
+    <MyInputBox />
 </div>
 
 <style>

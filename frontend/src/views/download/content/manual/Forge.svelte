@@ -178,7 +178,7 @@
             <MyLoadingPickaxe {loading_text} state={loading_state} />
         </div>
     {:else if isTransitioning}
-        <div in:slide_up out:slide_up on:outroend={control_leave}>
+        <div in:slide_up out:slide_up on:outroend={control_leave} style="height: auto;">
             {#each temp_forge_support as support}
                 <MySelectCard
                     title={support.version + " (" + support.count + ")"}

@@ -35,9 +35,9 @@
     <div
         id="icon-title"
         class="font-pcl"
-        style={windowOperation !== 2 ? "margin-left: 24px" : ""}
+        style={windowOperation !== 5 ? "margin-left: 24px" : ""}
     >
-        {#if windowOperation === 2}
+        {#if windowOperation === 5}
             <div id="icon-macos">
                 <div
                     class="macos macos-quit"
@@ -251,7 +251,7 @@
             更多
         </button>
     </div>
-    {#if windowOperation !== 2}
+    {#if windowOperation !== 5}
         <div id="icon-control">
             <button
                 class="icon-control-button cursor-pointer"

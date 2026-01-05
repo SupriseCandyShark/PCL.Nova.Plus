@@ -119,7 +119,7 @@
             <MyLoadingPickaxe {loading_text} state={loading_state} />
         </div>
     {:else if isTransitioning}
-        <div in:slide_up out:slide_up on:outroend={control_leave}>
+        <div in:slide_up out:slide_up on:outroend={control_leave} style="height: auto;">
             <MySelectCard title="版本列表 ({$fabric_list.length})">
                 <div class="version-all">
                     {#each $fabric_list as list}
@@ -187,14 +187,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        overflow-y: auto;
-    }
-    .component-fabric {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        margin-bottom: -15px;
         overflow-y: auto;
     }
     .component-fabric > div {
