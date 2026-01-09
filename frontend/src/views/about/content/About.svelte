@@ -76,7 +76,7 @@
         {
             avatar: CandyShark,
             title: "Candy Shark",
-            desc: "惊喜糖鲨开发团队",
+            desc: "糖鲨工作室开发团队",
             buttons: [
                 {
                     title: "Github 主页",
@@ -296,37 +296,27 @@
                 <MyNormalSpan>Wails（WebView程序）</MyNormalSpan>
                 <br />
                 <span class="gray">MIT</span>
-                <MyCodeSpan>
-                    https://github.com/wailsapp/wails
-                </MyCodeSpan>
+                <MyCodeSpan>https://github.com/wailsapp/wails</MyCodeSpan>
                 <br />
                 <MyNormalSpan>Golang（后端语言）</MyNormalSpan>
                 <br />
                 <span class="gray">BSD 3</span>
-                <MyCodeSpan>
-                    https://github.com/golang/go
-                </MyCodeSpan>
+                <MyCodeSpan>https://github.com/golang/go</MyCodeSpan>
                 <br />
                 <MyNormalSpan>Svelte（前端架构）</MyNormalSpan>
                 <br />
                 <span class="gray">MIT</span>
-                <MyCodeSpan>
-                    https://github.com/sveltejs/svelte
-                </MyCodeSpan>
+                <MyCodeSpan>https://github.com/sveltejs/svelte</MyCodeSpan>
                 <br />
                 <MyNormalSpan>TypeScript（前端语言）</MyNormalSpan>
                 <br />
                 <span class="gray">Apache License 2.0</span>
-                <MyCodeSpan>
-                    https://github.com/microsoft/TypeScript
-                </MyCodeSpan>
+                <MyCodeSpan>https://github.com/microsoft/TypeScript</MyCodeSpan>
                 <br />
                 <MyNormalSpan>MMCLL（启动器类库）</MyNormalSpan>
                 <br />
                 <span class="gray">MIT</span>
-                <MyCodeSpan>
-                    https://github.com/xphost008/mmcll
-                </MyCodeSpan>
+                <MyCodeSpan>https://github.com/xphost008/mmcll</MyCodeSpan>
                 <br />
                 <MyNormalSpan>skinview3d</MyNormalSpan>
                 <br />

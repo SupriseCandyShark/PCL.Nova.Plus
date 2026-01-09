@@ -586,6 +586,15 @@ func (mm *MainMethod) GenerateTutorialHomePage() {
 <MyValue id="key">这是一个变量，key为【key】，value为这串文本</MyValue>
 <MyValue id="mydivstyle">background-color: red;</MyValue>
 <MyValue id="myspanstyle">font-size: 50px;</MyValue>
+<MyCard title="加载框详解" isExpand="True" canExpand="True">
+    <MyDiv>下列将为各位讲解一下加载框，该框的作用并不是让各位操作的，而是让某些需要联网更新的主页能够提示用户该处正在施工中。</MyDiv>
+    <MyLoadingPickaxe state="true" title="加载失败！"/>
+    <MyDiv>上图展示了一个加载失败的加载框，该处将在主页一开始加载时默认直接爆红！</MyDiv>
+    <MyLoadingPickaxe state="false" title="加载中……"/>
+    <MyDiv>当然，也可以直接将 state 置于 false，这样可以直接让加载框开始砸地（加载中……）</MyDiv>
+    <MyDiv>需要注意的一点是：加载框默认是独占一行的！你几乎不能允许他可以成为行内元素！因为他本身并不支持 style 属性！</MyDiv>
+    <MyDiv>但是，加载框可以设置 width 和 height！默认的 width 和 height 是 auto，也就是自适应文字的变化而变化！</MyDiv>
+</MyCard>
 <MyCard title="变量详解" isExpand="True" canExpand="True">
     <MyDiv>这是一个变量：${key}</MyDiv>
     <MyDiv style="${mydivstyle}">你也可以定义 MyDiv 和 <MySpan style="${myspanstyle}">MySpan</MySpan> 的 style 作为变量。</MyDiv>

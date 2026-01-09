@@ -22,6 +22,8 @@ authlib-injector.log
 crypto_test.go
 dev.bat
 build.bat
+dev.sh
+build.sh
 runtime_test.go
 
 # macOS

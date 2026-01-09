@@ -10,7 +10,7 @@ body {
     font-synthesis: none;
     image-rendering: pixelated;
     flex-shrink: 0;
-    font-size: 16px;
+    font-size: 1rem;
 }
 @font-face {
     font-family: "PCL";

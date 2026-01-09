@@ -17,6 +17,7 @@
     import RedstoneBlock from "../../../assets/images/Blocks/RedstoneBlock.png";
     import RedstoneLampOn from "../../../assets/images/Blocks/RedstoneLampOn.png";
     import RedstoneLampOff from "../../../assets/images/Blocks/RedstoneLampOff.png";
+    import MyLoadingPickaxe from "../../../component/card/MyLoadingPickaxe.svelte";
     import {
         homepage_cache,
         homepage_value,
@@ -161,36 +162,50 @@
     </svg>
 {:else if control.name === "MyImg"}
     <img
-        src={control.src === "CommandBlock"
-            ? CommandBlock
-            : control.src === "Cobblestone"
-              ? CobbleStone
-              : control.src === "GoldBlock"
-                ? GoldBlock
-                : control.src === "Grass"
-                  ? Grass
-                  : control.src === "GrassPath"
-                    ? GrassPath
-                    : control.src === "Anvil"
-                      ? Anvil
-                      : control.src === "RedstoneBlock"
-                        ? RedstoneBlock
-                        : control.src === "RedstoneLampOn"
-                          ? RedstoneLampOn
-                          : control.src === "RedstoneLampOff"
-                            ? RedstoneLampOff
-                            : control.src === "Egg"
-                              ? Egg
-                              : control.src === "Fabric"
-                                ? Fabric
-                                : control.src === "NeoForge"
-                                  ? NeoForge
-                                  : control.src}
+        src={[
+            CommandBlock,
+            CobbleStone,
+            GoldBlock,
+            Grass,
+            GrassPath,
+            Anvil,
+            RedstoneBlock,
+            RedstoneLampOn,
+            RedstoneLampOff,
+            Egg,
+            Fabric,
+            NeoForge,
+        ][
+            [
+                "CommandBlock",
+                "Cobblestone",
+                "GoldBlock",
+                "Grass",
+                "GrassPath",
+                "Anvil",
+                "RedstoneBlock",
+                "RedstoneLampOn",
+                "RedstoneLampOff",
+                "Egg",
+                "Fabric",
+                "NeoForge",
+            ].findIndex((item) => item === control.src)
+        ]}
         alt={control.alt}
         style={control.style}
     />
 {:else if control.name === "MyValue"}
     {addValue(control.id ? control.id : "", control.children)}
+{:else if control.name === "MyLoadingPickaxe"}
+    <div
+        style="width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;"
+    >
+        <MyLoadingPickaxe
+            style_in={`width: ${control.width ?? "auto"}; height: ${control.height ?? "auto"}`}
+            loading_text={control.title}
+            state={control.state === "true" ? true : false}
+        ></MyLoadingPickaxe>
+    </div>
 {/if}
 
 <style>

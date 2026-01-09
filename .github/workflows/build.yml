@@ -5,14 +5,14 @@ on:
   push:
     branches: [dev, main]
     paths:
-      - '.github/workflows/**'
-      - 'build/**'
-      - 'frontend/**'
-      - 'module/**'
-      - 'go.mod'
-      - 'main.go'
-      - 'VERSION'
-      - 'wails.json'
+      - ".github/workflows/**"
+      - "build/**"
+      - "frontend/**"
+      - "module/**"
+      - "go.mod"
+      - "main.go"
+      - "VERSION"
+      - "wails.json"
 
 env:
   NODE_OPTIONS: "--max-old-space-size=4096"
@@ -92,7 +92,7 @@ jobs:
       - name: Install Golang
         uses: actions/setup-go@v6
         with:
-          go-version: '1.25.4'
+          go-version: "1.25.4"
       - name: Install Nodes
         uses: actions/setup-node@v5
         with:
@@ -115,7 +115,7 @@ jobs:
           ver=${{steps.version.outputs.version}}
           rver=${ver%-*}
           wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
-          "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
+          "-X 'NovaPlus/module/mmcll.LauncherVersion=$ver' \
           -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
           -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
           -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \
@@ -135,7 +135,7 @@ jobs:
           ver=${{steps.version.outputs.version}}
           rver=${ver%-*}
           wails build -v 0 -tags webkit2_41,desktop,production -platform ${{matrix.build.platform}} -ldflags \
-          "-X 'NovaPlus/module/mmcll.LauncherVersion=${{steps.version.outputs.version}}' \
+          "-X 'NovaPlus/module/mmcll.LauncherVersion=$ver' \
           -X 'NovaPlus/module/mmcll.LauncherName=PCL.Nova.Plus' \
           -X 'NovaPlus/module/mmcll.LauncherUserAgent=PCL.Nova.Plus/$rver' \
           -X 'NovaPlus/module/launcher.CF_KEY=$cfKey' \

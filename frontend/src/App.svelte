@@ -121,7 +121,7 @@
                     "OpenGL 兼容层提示",
                     "检测到您目前处于 Windows arm64 环境！如果您的处理器是 高通 系列处理器，您可能需要下载 OpenGL 兼容层才能正常使用游戏。",
                     MSG_WARNING,
-                    ["我已知晓，不再提示", "点我进入网站下载"],
+                    ["我已知晓，不再提示", "我已知晓，并进入网站下载"],
                 );
                 if (c === 0) {
                     await WriteConfig(
@@ -130,11 +130,8 @@
                         "CheckWarning",
                         "1",
                     );
-                } else {
-                    OpenCustomURL(
-                        "https://apps.microsoft.com/detail/9nqpsl29bfff",
-                    );
                 }
+                OpenCustomURL("https://apps.microsoft.com/detail/9nqpsl29bfff");
             }
         }
     });

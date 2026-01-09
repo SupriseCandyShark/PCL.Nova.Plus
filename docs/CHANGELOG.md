@@ -9,6 +9,7 @@
 1. fix(Download): 修复了下载界面的卡片未能正确在页面底部加上margin-bottom: 10px。（加个height: auto即可）
 2. fix(Launch): 修复了在启动游戏时，Nova 未能正确的替换 Forge 老版本的键值：${primary_jar_name} 键。
 3. fix(RightBottomButton): 调整了右下角的按钮位置，现在应该会显示在 messagebox 的遮罩层下方了！不会在弹出了！
+4. fix(About): 惊喜糖鲨 -> 糖鲨工作室！
 
 ### feat
 
@@ -18,6 +19,11 @@
     1. 除了高通骁龙处理器是 arm64 以外，还有国产麒麟芯片也是 arm64 架构，但是该架构在 HMCL 上未作提示。。
     2. 现在会弹出一个框框，确认是否安装了 OpenGL 兼容层提示！
 4. feat(EULA): 在刚打开启动器时，会弹出一个框，提示最终用户协议！您需要点击 同意 才能正常使用启动器！
+5. feat(HomePage): 新增了一个 LoadingPickaxe 的示例！
+
+### chore
+
+1. chore(some): 小修小补了一下源代码，现在代码应该更好看了（
 
 # 0.0.18.1
 
